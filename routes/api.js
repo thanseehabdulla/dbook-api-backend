@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'toor',
+    password: 'namoideen',
     database: 'invoice'
 });
 
@@ -42,10 +42,10 @@ router.post('/register', function (req, res, next) {
         .toString();
 
         connection.query(queryUser, function (err, rows, fields) {
-            if (err)  res.send({status:'invalid'});
+            if (err) throw err
 
             console.log(rows);
-
+            res.send({status:'success'})
             // Store hash in database
         })
 
@@ -63,12 +63,12 @@ router.post('/login', function (req, res, next) {
 
 
     connection.query(queryLogin, function (err, rows, fields) {
-        if (err)  res.send({status:'invalid'});
+        if (err)  throw err;
         if(rows.length > 0) {
             // console.log(rows[0].password);
             bcrypt.compare(password, rows[0].password, function (err, ress) {
                 if (ress) {
-                    res.send({status:'success',userid:rows[0].id,vendername:rows[0].name});
+                    res.send({status:'success',userid:rows[0].id});
                 } else {
                     res.send({status:'invalid'});
                     // Passwords don't match
@@ -87,7 +87,6 @@ router.post('/login', function (req, res, next) {
 /* add purchase */
 router.post('/purchase', function (req, res, next) {
     var datas = req.body;
-    var userid = datas['userid'];
     var vendername = datas['vendername'];
     var trn_no = datas['trn_no'];
     var invoice_date = datas['date_invoice'];
@@ -172,7 +171,6 @@ router.post('/sales', function (req, res, next) {
         .set("gross_sales", gross_sales)
         .set("tax", tax)
         .set("net_sales", net_sales)
-        .set("total", total)
         .toString();
 
     connection.query(queryDashboard, function (err, rows, fields) {
