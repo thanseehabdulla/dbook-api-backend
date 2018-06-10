@@ -123,7 +123,7 @@ router.get('/purchase', function (req, res, next) {
     var queryDashboard = "select * from purchase";
 
     connection.query(queryDashboard, function (err, rows, fields) {
-        if (err) throw err
+        if (err) res.send({status:'invalid'});
 
         console.log('purchase get successful');
         res.send(rows);
@@ -131,52 +131,97 @@ router.get('/purchase', function (req, res, next) {
     })
 
 });
-//
-//
-// /* get dashboard with id*/
-// router.get('/purchase/:useridls/:env', function (req, res, next) {
-//     // res.send('repond with dashboard page');
-//     var userid = req.params.userid;
-//     var env = req.params.env;
-//
-//     var queryDashboard = "select name from dashboard where env='"+env+"' and userid="+userid;
-//
-//     connection.query(queryDashboard, function (err, rows, fields) {
-//
-//         if (err) throw err
-//
-//         console.log('dashboard get successful');
-//         var result = rows.map(data => data.name);
-//         res.send(result);
-//
-//         // connection.end()
-//     })
-//
-// });
-//
-//
-// /* get dashboard with id*/
-// router.get('/dashboard/:userid/:env/:name', function (req, res, next) {
-//     // res.send('respond with dashboard page');
-//     var userid = req.params.userid;
-//     var env = req.params.env;
-//     var name = req.params.name;
-//
-//     var queryDashboard = "select dashboard from dashboard where env='"+env+"' and userid="+userid + " and name='"+name+"'";
-//    console.log(queryDashboard)
-//     connection.query(queryDashboard, function (err, rows, fields) {
-//
-//         if (err) throw err
-//
-//         console.log('dashboard get successful');
-//         var result = rows.map(data => data.dashboard);
-//         res.send(result);
-//
-//         // connection.end()
-//     })
-//
-// });
 
+
+/* get purchase with vendername*/
+router.get('/purchase/:vendername', function (req, res, next) {
+    // res.send('repond with dashboard page');
+    var vendername = req.params.vendername;
+
+
+    var queryDashboard = "select * from purchase where vendername='"+vendername+"'";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+
+        if (err) res.send({status:'invalid'});
+
+        console.log('purchase get successful');
+        // var result = rows.map(data => data.name);
+        res.send(rows);
+
+        // connection.end()
+    })
+
+});
+
+
+/* add sales */
+router.post('/sales', function (req, res, next) {
+    var datas = req.body;
+    var date = datas['date'];
+    var item_sold = datas['item_sold'];
+    var gross_sales = datas['gross_sales'];
+    var tax = datas['tax'];
+    var net_sales = datas['net_sales'];
+
+
+    var queryDashboard = squel.insert()
+        .into("sales")
+        .set("date", date)
+        .set("item_sold", item_sold)
+        .set("gross_sales", gross_sales)
+        .set("tax", tax)
+        .set("net_sales", net_sales)
+        .set("total", total)
+        .toString();
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('sales insert successful');
+        res.send('sales entry successful');
+        // connection.end()
+    })
+
+
+});
+
+
+/* get all sales */
+router.get('/sales', function (req, res, next) {
+    var queryDashboard = "select * from sales";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('sales get successful');
+        res.send(rows);
+        // connection.end()
+    })
+
+});
+
+
+/* get purchase with vendername*/
+router.get('/sales/:date', function (req, res, next) {
+    // res.send('repond with dashboard page');
+    var date = req.params.date;
+
+
+    var queryDashboard = "select * from sales where date='"+date+"'";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+
+        if (err) res.send({status:'invalid'});
+
+        console.log('sales get successful');
+        // var result = rows.map(data => data.name);
+        res.send(rows);
+
+        // connection.end()
+    })
+
+});
 
 
 
