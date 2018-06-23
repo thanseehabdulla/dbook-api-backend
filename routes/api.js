@@ -110,10 +110,26 @@ router.post('/purchase', function (req, res, next) {
         if (err) res.send({status:'invalid'});
 
         console.log('purchase insert successful');
-        res.send('purchase entry successful');
+        res.send({status:'success',
+        desc:'purchase entry successful'});
         // connection.end()
     })
 
+
+});
+
+
+/* get all user */
+router.get('/user', function (req, res, next) {
+    var queryDashboard = "select * from user";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('purchase get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
 
 });
 
@@ -125,7 +141,7 @@ router.get('/purchase', function (req, res, next) {
         if (err) res.send({status:'invalid'});
 
         console.log('purchase get successful');
-        res.send(rows);
+        res.send({data:rows});
         // connection.end()
     })
 
@@ -146,7 +162,7 @@ router.get('/purchase/:vendername', function (req, res, next) {
 
         console.log('purchase get successful');
         // var result = rows.map(data => data.name);
-        res.send(rows);
+        res.send({data:rows});
 
         // connection.end()
     })
@@ -177,7 +193,8 @@ router.post('/sales', function (req, res, next) {
         if (err) res.send({status:'invalid'});
 
         console.log('sales insert successful');
-        res.send('sales entry successful');
+        res.send({status:'success',
+        desc:'sales entry successful'});
         // connection.end()
     })
 
@@ -214,7 +231,7 @@ router.get('/sales/:date', function (req, res, next) {
 
         console.log('sales get successful');
         // var result = rows.map(data => data.name);
-        res.send(rows);
+        res.send({data:rows});
 
         // connection.end()
     })
