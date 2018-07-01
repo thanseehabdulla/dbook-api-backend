@@ -94,6 +94,9 @@ router.post('/purchase', function (req, res, next) {
     var vat = datas['vat'];
     var total = datas['total'];
     var invoice_number = datas['invoice_number'];
+    var userid = datas['userid'];
+
+
 
     var queryDashboard = squel.insert()
         .into("purchase")
@@ -103,6 +106,7 @@ router.post('/purchase', function (req, res, next) {
         .set("amount", amount)
         .set("vat", vat)
         .set("total", total)
+        .set("userid",userid)
         .set("invoice_number", invoice_number)
         .toString();
 
@@ -135,6 +139,7 @@ router.get('/user', function (req, res, next) {
 
 /* get all purchase */
 router.get('/purchase', function (req, res, next) {
+
     var queryDashboard = "select * from purchase";
 
     connection.query(queryDashboard, function (err, rows, fields) {
@@ -152,7 +157,7 @@ router.get('/purchase', function (req, res, next) {
 router.get('/purchase/:vendername', function (req, res, next) {
     // res.send('repond with dashboard page');
     var vendername = req.params.vendername;
-
+  
 
     var queryDashboard = "select * from purchase where vendername='"+vendername+"'";
 
@@ -177,13 +182,15 @@ router.post('/sales', function (req, res, next) {
     var net_total = datas['net_total'];
     var tax = datas['tax'];
     var net_sales = datas['net_sales'];
-
+     var userid = datas['userid'];
+ 
 
     var queryDashboard = squel.insert()
         .into("sales")
         .set("date", date)
         .set("net_total", net_total)
         .set("tax", tax)
+        .set("userid",userid)
         .set("net_sales", net_sales)
         .toString();
 
@@ -203,7 +210,7 @@ router.post('/sales', function (req, res, next) {
 /* get all sales */
 router.get('/sales', function (req, res, next) {
     var queryDashboard = "select * from sales";
-
+   
     connection.query(queryDashboard, function (err, rows, fields) {
         if (err) res.send({status:'invalid'});
 
@@ -219,7 +226,7 @@ router.get('/sales', function (req, res, next) {
 router.get('/sales/:date', function (req, res, next) {
     // res.send('repond with dashboard page');
     var date = req.params.date;
-
+    
 
     var queryDashboard = "select * from sales where date='"+date+"'";
 
