@@ -26,6 +26,8 @@ router.post('/register', function (req, res, next) {
     var password = datas['password'];
     var email = datas['email'];
     var phone = datas['phone'];
+var level = datas['level'];
+
     var address = datas['address'] ? datas['address'] : 'nil';
 
     // connection.connect()
@@ -35,6 +37,7 @@ router.post('/register', function (req, res, next) {
         .into("user")
         .set("name", name)
         .set("email", email)
+         .set("level", level)
         .set("phone", phone)
         .set("username", username)
         .set("password", hash)
@@ -52,6 +55,39 @@ router.post('/register', function (req, res, next) {
     });
 
 });
+
+
+
+
+/* register vender */
+router.post('/registervender', function (req, res, next) {
+    var datas = req.body;
+    var vendername = datas['vendername'];
+    var trn_no = datas['trn_no'];
+   
+    // connection.connect()
+
+     var queryUser = squel.insert()
+        .into("vender")
+        .set("name",vendername)
+        .set("trn_no", trn_no)
+         .toString();
+
+        connection.query(queryUser, function (err, rows, fields) {
+            if (err) throw err
+
+            console.log(rows);
+            res.send({status:'success'})
+            // Store hash in database
+        })
+
+   
+});
+
+
+
+
+
 
 /* login authentication */
 router.post('/login', function (req, res, next) {
@@ -111,7 +147,7 @@ router.post('/purchase', function (req, res, next) {
         .toString();
 
     connection.query(queryDashboard, function (err, rows, fields) {
-        if (err) res.send({status:'invalid'});
+        if (err) res.send({status:'invalid',err:err});
 
         console.log('purchase insert successful');
         res.send({status:'success',
@@ -153,6 +189,40 @@ router.get('/purchase', function (req, res, next) {
 });
 
 
+/* get all vender */
+router.get('/vender', function (req, res, next) {
+
+    var queryDashboard = "select * from vender";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('vender get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
+
+
+
+/* get all purchase with id */
+router.get('/purchase/:userid', function (req, res, next) {
+    var userid = req.params.userid; 
+    var queryDashboard = "select * from purchase where userid='"+userid+"'";
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('purchase get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
+
 /* get purchase with vendername*/
 router.get('/purchase/:vendername', function (req, res, next) {
     // res.send('repond with dashboard page');
@@ -182,7 +252,7 @@ router.post('/sales', function (req, res, next) {
     var net_total = datas['net_total'];
     var tax = datas['tax'];
     var net_sales = datas['net_sales'];
-     var userid = datas['userid'];
+    var userid = datas['userid'];
  
 
     var queryDashboard = squel.insert()
@@ -195,7 +265,7 @@ router.post('/sales', function (req, res, next) {
         .toString();
 
     connection.query(queryDashboard, function (err, rows, fields) {
-        if (err) res.send({status:'invalid'});
+        if (err) res.send({status:'invalid',err:err});
 
         console.log('sales insert successful');
         res.send({status:'success',
@@ -207,10 +277,30 @@ router.post('/sales', function (req, res, next) {
 });
 
 
-/* get all sales */
-router.get('/sales', function (req, res, next) {
-    var queryDashboard = "select * from sales";
-   
+/* get all sales*/
+router.get('/sales', function (req, res, next){
+
+var queryDashboard = "select * from sales";
+    
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('sales get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
+
+
+
+/* get all sales with id*/
+router.get('/sales/:userid', function (req, res, next) {
+var userid = req.params.userid; 
+    
+var queryDashboard = "select * from sales where userid='"+userid+"'";
+    
     connection.query(queryDashboard, function (err, rows, fields) {
         if (err) res.send({status:'invalid'});
 
@@ -226,7 +316,8 @@ router.get('/sales', function (req, res, next) {
 router.get('/sales/:date', function (req, res, next) {
     // res.send('repond with dashboard page');
     var date = req.params.date;
-    
+    var userid = req.params.userid; 
+
 
     var queryDashboard = "select * from sales where date='"+date+"'";
 
