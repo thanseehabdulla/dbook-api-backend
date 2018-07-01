@@ -104,7 +104,7 @@ router.post('/login', function (req, res, next) {
             // console.log(rows[0].password);
             bcrypt.compare(password, rows[0].password, function (err, ress) {
                 if (ress) {
-                    res.send({status:'success',userid:rows[0].id});
+                    res.send({status:'success',userid:rows[0].id,level:rows[0].level});
                 } else {
                     res.send({status:'invalid'});
                     // Passwords don't match
