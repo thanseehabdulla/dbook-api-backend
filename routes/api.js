@@ -174,8 +174,7 @@ router.get('/purchase/:vendername', function (req, res, next) {
 router.post('/sales', function (req, res, next) {
     var datas = req.body;
     var date = datas['date'];
-    var item_sold = datas['item_sold'];
-    var gross_sales = datas['gross_sales'];
+    var net_total = datas['net_total'];
     var tax = datas['tax'];
     var net_sales = datas['net_sales'];
 
@@ -183,8 +182,7 @@ router.post('/sales', function (req, res, next) {
     var queryDashboard = squel.insert()
         .into("sales")
         .set("date", date)
-        .set("item_sold", item_sold)
-        .set("gross_sales", gross_sales)
+        .set("net_total", net_total)
         .set("tax", tax)
         .set("net_sales", net_sales)
         .toString();
@@ -210,7 +208,7 @@ router.get('/sales', function (req, res, next) {
         if (err) res.send({status:'invalid'});
 
         console.log('sales get successful');
-        res.send(rows);
+        res.send({data:rows});
         // connection.end()
     })
 
