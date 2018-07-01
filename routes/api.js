@@ -206,6 +206,23 @@ router.get('/vender', function (req, res, next) {
 
 
 
+/* get all purchase with id mobile */
+router.get('/purchasem/:userid', function (req, res, next) {
+    var userid = req.params.userid; 
+    var queryDashboard = "select * from purchase where userid='"+userid+"' ORDER BY id DESC LIMIT 20";
+ 
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+ 
+        console.log('purchase get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
+
+
 
 /* get all purchase with id */
 router.get('/purchase/:userid', function (req, res, next) {
@@ -310,6 +327,24 @@ var queryDashboard = "select * from sales where userid='"+userid+"' ORDER BY id 
     })
 
 });
+
+
+/* get all sales with id mobile*/
+router.get('/salesm/:userid', function (req, res, next) {
+var userid = req.params.userid; 
+    
+var queryDashboard = "select * from sales where userid='"+userid+"' ORDER BY id DESC LIMIT 20";
+    
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid'});
+
+        console.log('sales get successful');
+        res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
 
 
 /* get purchase with vendername*/
