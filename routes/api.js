@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'namoideen',
+    password: '',
     database: 'invoice'
 });
 
@@ -57,6 +57,45 @@ var level = datas['level'];
 });
 
 
+/* register user */
+router.put('/user', function (req, res, next) {
+    var datas = req.body;
+    var name = datas['name'];
+    var username = datas['username'];
+    var password = datas['password'];
+    var email = datas['email'];
+    var phone = datas['phone'];
+    var level = datas['level'];
+    var id = datas['id'];
+
+    var address = datas['address'] ? datas['address'] : 'nil';
+
+    // connection.connect()
+
+    bcrypt.hash(password, 10, function (err, hash) {
+    var queryUser = squel.update()
+        .table("user")
+        .set("name", name)
+        .set("email", email)
+         .set("level", level)
+        .set("phone", phone)
+        .set("username", username)
+        .set("password", hash)
+        .set("address", address)
+        .where("id="+id)
+        .toString();
+
+        connection.query(queryUser, function (err, rows, fields) {
+            if (err) throw err
+
+            console.log(rows);
+            res.send({status:'success'})
+            // Store hash in database
+        })
+
+    });
+
+});
 
 
 /* register vender */
@@ -71,6 +110,34 @@ router.post('/registervender', function (req, res, next) {
         .into("vender")
         .set("name",vendername)
         .set("trn_no", trn_no)
+         .toString();
+
+        connection.query(queryUser, function (err, rows, fields) {
+            if (err) throw err
+
+            console.log(rows);
+            res.send({status:'success'})
+            // Store hash in database
+        })
+
+   
+});
+
+
+/* update vender */
+router.put('/vender', function (req, res, next) {
+    var datas = req.body;
+    var vendername = datas['vendername'];
+    var trn_no = datas['trn_no'];
+    var id = datas['id'];
+   
+    // connection.connect()
+
+     var queryUser = squel.update()
+        .table("vender")
+        .set("name",vendername)
+        .set("trn_no", trn_no)
+         .where("id ="+id)
          .toString();
 
         connection.query(queryUser, function (err, rows, fields) {
@@ -199,6 +266,37 @@ router.get('/vender', function (req, res, next) {
 
         console.log('vender get successful');
         res.send({data:rows});
+        // connection.end()
+    })
+
+});
+
+
+/* delete vender */
+router.delete('/vender/:rowid', function (req, res, next) {
+    var rowid = req.params.rowid;
+    var queryDashboard = "DELETE FROM vender where id="+rowid;
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('vender delete successful');
+        res.send({status:'success'});
+        // connection.end()
+    })
+
+});
+
+/* delete user */
+router.delete('/user/:userid', function (req, res, next) {
+    var userid = req.params.userid;
+    var queryDashboard = "DELETE FROM user where id="+userid;
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('vender delete successful');
+        res.send({status:'success'});
         // connection.end()
     })
 
