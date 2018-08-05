@@ -155,7 +155,6 @@ router.put('/vender', function (req, res, next) {
 
 
 
-
 /* login authentication */
 router.post('/login', function (req, res, next) {
     var datas = req.body;
@@ -287,6 +286,37 @@ router.delete('/vender/:rowid', function (req, res, next) {
 
 });
 
+/* delete sales */
+router.delete('/sales/:rowid', function (req, res, next) {
+    var rowid = req.params.rowid;
+    var queryDashboard = "DELETE FROM sales where id="+rowid;
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('sales delete successful');
+        res.send({status:'success'});
+        // connection.end()
+    })
+
+});
+
+
+/* delete purchase */
+router.delete('/purchase/:rowid', function (req, res, next) {
+    var rowid = req.params.rowid;
+    var queryDashboard = "DELETE FROM purchase where id="+rowid;
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('purchase delete successful');
+        res.send({status:'success'});
+        // connection.end()
+    })
+
+});
+
 /* delete user */
 router.delete('/user/:userid', function (req, res, next) {
     var userid = req.params.userid;
@@ -358,6 +388,56 @@ router.get('/purchase/:vendername', function (req, res, next) {
     })
 
 });
+
+/* get purchase with daterange*/
+router.get('/purchase/:startdate/:enddate', function (req, res, next) {
+    // res.send('repond with dashboard page');
+    var startdate = req.params.startdate;
+    var enddate = req.params.enddate;
+  startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
+   enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
+
+    var queryDashboard = "select * from purchase WHERE date_invoice >='"+startdate+"' and date_invoice <='"+ enddate+"'";
+    console.log(queryDashboard);
+    connection.query(queryDashboard, function (err, rows, fields) {
+
+        if (err) res.send({status:'invalid'});
+
+        console.log('purchase get successful');
+        // var result = rows.map(data => data.name);
+        res.send({data:rows});
+
+        // connection.end()
+    })
+
+});
+
+
+/* get sales with daterange*/
+router.get('/sales/:startdate/:enddate', function (req, res, next) {
+    // res.send('repond with dashboard page');
+    var startdate = req.params.startdate;
+    var enddate = req.params.enddate;
+
+    startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
+    enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
+  
+
+    var queryDashboard = "select * from sales WHERE date>='"+startdate+"' and date<='"+ enddate+"'";
+    console.log(queryDashboard);
+    connection.query(queryDashboard, function (err, rows, fields) {
+
+        if (err) res.send({status:'invalid'});
+
+        console.log('purchase get successful');
+        // var result = rows.map(data => data.name);
+        res.send({data:rows});
+
+        // connection.end()
+    })
+
+});
+
 
 
 /* add sales */
