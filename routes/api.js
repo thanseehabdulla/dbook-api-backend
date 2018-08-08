@@ -472,7 +472,7 @@ router.get('/purchase/:startdate/:enddate/:userid', function (req, res, next) {
   startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
    enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
 
-    var queryDashboard = "select * from purchase WHERE  userid='"+userid+"' and STR_TO_DATE(LEFT(date_invoice,LOCATE(' ',date_invoice)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
+    var queryDashboard = "select * from purchase WHERE userid='"+userid+"' and STR_TO_DATE(LEFT(date_invoice,LOCATE(' ',date_invoice)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
