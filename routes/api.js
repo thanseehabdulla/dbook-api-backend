@@ -152,6 +152,80 @@ router.put('/vender', function (req, res, next) {
 });
 
 
+/* update purchase */
+router.put('/purchase', function (req, res, next) {
+    var datas = req.body;
+    var vendername = datas['vendername'];
+    var trn_no = datas['trn_no'];
+    var invoice_date = datas['date_invoice'];
+    var amount = datas['amount'];
+    var vat = datas['vat'];
+    var total = datas['total'];
+    var invoice_number = datas['invoice_number'];
+    var userid = datas['userid'];
+    var id = datas['id'];
+
+
+    var queryDashboard = squel.update()
+        .table("purchase")
+        .set("vendername", vendername)
+        .set("trn_no", trn_no)
+        .set("date_invoice", invoice_date)
+        .set("amount", amount)
+        .set("vat", vat)
+        .set("total", total)
+        .set("userid",userid)
+        .set("invoice_number", invoice_number)
+         .where("id ="+id)
+        .toString();
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('purchase update successful');
+        res.send({status:'success',
+        desc:'purchase entry successful'});
+        // connection.end()
+    })
+
+
+});
+
+
+/* update sales */
+router.put('/sales', function (req, res, next) {
+    var datas = req.body;
+    var date = datas['date'];
+    var net_total = datas['net_total'];
+    var tax = datas['tax'];
+    var net_sales = datas['net_sales'];
+    var userid = datas['userid'];
+    var id = datas['id'];
+ 
+
+    var queryDashboard = squel.update()
+        .table("sales")
+        .set("date", date)
+        .set("net_total", net_total)
+        .set("tax", tax)
+        .set("userid",userid)
+        .set("net_sales", net_sales)
+         .where("id ="+id)
+        .toString();
+
+        console.log(queryDashboard);
+
+    connection.query(queryDashboard, function (err, rows, fields) {
+        if (err) res.send({status:'invalid',err:err});
+
+        console.log('sales update successful');
+        res.send({status:'success',
+        desc:'sales entry successful'});
+        // connection.end()
+    })
+
+
+});
 
 
 
