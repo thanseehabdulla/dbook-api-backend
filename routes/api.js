@@ -464,14 +464,15 @@ router.get('/purchase/:vendername', function (req, res, next) {
 });
 
 /* get purchase with daterange*/
-router.get('/purchase/:startdate/:enddate', function (req, res, next) {
+router.get('/purchase/:startdate/:enddate/:userid', function (req, res, next) {
     // res.send('repond with dashboard page');
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
+     var userid = req.params.userid;
   startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
    enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
 
-    var queryDashboard = "select * from purchase WHERE date_invoice >='"+startdate+"' and date_invoice <='"+ enddate+"'";
+    var queryDashboard = "select * from purchase WHERE  userid='"+userid+"' and STR_TO_DATE(LEFT(date_invoice,LOCATE(' ',date_invoice)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
@@ -488,16 +489,16 @@ router.get('/purchase/:startdate/:enddate', function (req, res, next) {
 
 
 /* get sales with daterange*/
-router.get('/sales/:startdate/:enddate', function (req, res, next) {
+router.get('/sales/:startdate/:enddate/:userid', function (req, res, next) {
     // res.send('repond with dashboard page');
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
-
+var userid = req.params.userid;
     startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
     enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
   
 
-    var queryDashboard = "select * from sales WHERE date>='"+startdate+"' and date<='"+ enddate+"'";
+    var queryDashboard = "select * from sales WHERE userid='"+userid+"' and STR_TO_DATE(LEFT(date,LOCATE(' ',date)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
