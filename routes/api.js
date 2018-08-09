@@ -471,8 +471,10 @@ router.get('/purchase/:startdate/:enddate/:userid', function (req, res, next) {
      var userid = req.params.userid;
   startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
    enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
-
-    var queryDashboard = "select * from purchase WHERE userid='"+userid+"' and STR_TO_DATE(LEFT(date_invoice,LOCATE(' ',date_invoice)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
+ if(userid !== 'default')
+    var queryDashboard = "select * from purchase WHERE userid='"+userid+"' and STR_TO_DATE(date_invoice,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
+   else
+    var queryDashboard = "select * from purchase WHERE STR_TO_DATE(date_invoice,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
@@ -497,8 +499,10 @@ var userid = req.params.userid;
     startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
     enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
   
-
-    var queryDashboard = "select * from sales WHERE userid='"+userid+"' and STR_TO_DATE(LEFT(date,LOCATE(' ',date)),'%m/%d/%Y') BETWEEN '"+startdate+"' AND '"+enddate+"'";
+    if(userid !== 'default')
+    var queryDashboard = "select * from sales WHERE userid='"+userid+"' and STR_TO_DATE(date,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
+    else
+var queryDashboard = "select * from sales WHERE STR_TO_DATE(date,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";        
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
