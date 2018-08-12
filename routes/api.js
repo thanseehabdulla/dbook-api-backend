@@ -271,6 +271,20 @@ router.post('/purchase', function (req, res, next) {
     var total = datas['total'];
     var invoice_number = datas['invoice_number'];
     var userid = datas['userid'];
+    var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+
+if(dd<10) {
+    dd = '0'+dd
+} 
+
+if(mm<10) {
+    mm = '0'+mm
+} 
+
+today = mm + '/' + dd + '/' + yyyy;
 
 
 
@@ -283,6 +297,7 @@ router.post('/purchase', function (req, res, next) {
         .set("vat", vat)
         .set("total", total)
         .set("userid",userid)
+        .set("created_at",today)
         .set("invoice_number", invoice_number)
         .toString();
 
