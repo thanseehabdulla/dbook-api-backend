@@ -479,17 +479,25 @@ router.get('/purchase/:vendername', function (req, res, next) {
 });
 
 /* get purchase with daterange*/
-router.get('/purchase/:startdate/:enddate/:userid', function (req, res, next) {
+router.get('/purchase/:startdate/:enddate/:userid/:option', function (req, res, next) {
     // res.send('repond with dashboard page');
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
      var userid = req.params.userid;
+      var option = req.params.option;
   startdate = startdate.split('-')[0]+"/"+startdate.split('-')[1]+"/"+startdate.split('-')[2]
    enddate = enddate.split('-')[0]+"/"+enddate.split('-')[1]+"/"+enddate.split('-')[2]
+ if(option === "purchase"){
  if(userid !== 'default')
     var queryDashboard = "select * from purchase WHERE userid='"+userid+"' and STR_TO_DATE(date_invoice,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
    else
     var queryDashboard = "select * from purchase WHERE STR_TO_DATE(date_invoice,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
+    }else{
+        if(userid !== 'default')
+    var queryDashboard = "select * from purchase WHERE userid='"+userid+"' and STR_TO_DATE(created_at,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
+   else
+    var queryDashboard = "select * from purchase WHERE STR_TO_DATE(created_at,'%m/%d/%Y') BETWEEN str_to_date('"+startdate+"','%m/%d/%Y') AND str_to_date('"+enddate+"','%m/%d/%Y')";
+    }
     console.log(queryDashboard);
     connection.query(queryDashboard, function (err, rows, fields) {
 
